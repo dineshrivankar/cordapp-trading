@@ -45,6 +45,7 @@ object TradeSchemaV1 : MappedSchema(
 
             @Column(name = "linear_id")
             var linearId: UUID
+
     ) : PersistentState() {
         // Default constructor required by hibernate.
         constructor(): this("", "", 0,"",0,"","", UUID.randomUUID())

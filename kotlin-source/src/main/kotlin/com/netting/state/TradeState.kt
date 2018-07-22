@@ -12,15 +12,16 @@ import net.corda.core.schemas.QueryableState
 
 /**
  * The state object recording Trade agreements between two parties.
- *
  * A state must implement [ContractState] or one of its descendants.
  *
- * @param sellValue the value of the Trade.
- * @param sellCurrency the currency of the Trade.
- * @param buyValue the value of the Trade.
- * @param buyCurrency the currency of the Trade.
+ * @param sellValue sell value of the Trade.
+ * @param sellCurrency sell currency for the Trade.
+ * @param buyValue buy value of the Trade.
+ * @param buyCurrency buy currency for the Trade.
  * @param initiatingParty the party initiating the Trade.
- * @param counterParty the party receiving and responding the Trade.
+ * @param counterParty the Trade counter party.
+ * @param tradeStatus the Trade Status.
+ * @param linearId Unique ID for the Trade.
  */
 data class TradeState(val sellValue: Int,
                       val sellCurrency: String,
@@ -50,6 +51,5 @@ data class TradeState(val sellValue: Int,
             else -> throw IllegalArgumentException("Unrecognised schema $schema")
         }
     }
-
     override fun supportedSchemas(): Iterable<MappedSchema> = listOf(TradeSchemaV1)
 }
