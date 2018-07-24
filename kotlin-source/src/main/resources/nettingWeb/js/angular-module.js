@@ -16,7 +16,7 @@
 // VIA THE NODE'S RPC INTERFACE. IN THE COMING WEEKS WE'LL WRITE A TUTORIAL ON
 // HOW BEST TO DO THIS.
 
-const app = angular.module('nettingAppModule', ['ui.bootstrap']);
+const app = angular.module('nettingAppModule', ['ui.bootstrap','ngLoadingOverlay']);
 
 // Fix for unhandled rejections bug.
 app.config(['$qProvider', function ($qProvider) {
@@ -30,7 +30,6 @@ app.controller('NeetingAppController', function($http, $location, $uibModal) {
     const apiBaseURL = "/api/netting/";
     let peers = [];
     $http.get(apiBaseURL + "me").then((response) => demoApp.thisNode = response.data.me);
-
     $http.get(apiBaseURL + "peers").then((response) => peers = response.data.peers);
 
     demoApp.openModal = () => {
@@ -87,14 +86,14 @@ app.controller('NeetingAppController', function($http, $location, $uibModal) {
 
 });
 
-app.controller('CreateTradeCtrl', function ($http, $location, $uibModalInstance, $uibModal, demoApp, apiBaseURL, peers) {
+app.controller('CreateTradeCtrl', function ($http, $location, $uibModalInstance, $uibModal, demoApp, apiBaseURL, peers, $loadingOverlay) {
     const modalInstance = this;
     modalInstance.peers = peers;
     modalInstance.form = {};
     modalInstance.formError = false;
-    console.log(demoApp.currentTrade);
     // Validate and create Trade.
     modalInstance.create = () => {
+        $loadingOverlay.show('Transaction Processing ...', 'rgba(0, 0, 0, 0.3)', '#fff');
         if (invalidFormInput()) {
             modalInstance.formError = true;
         } else {
@@ -104,10 +103,12 @@ app.controller('CreateTradeCtrl', function ($http, $location, $uibModalInstance,
             // Create Trade and handle success / fail responses.
             $http.put(createTradeEndpoint).then(
                 (result) => {
+                    $loadingOverlay.hide();
                     modalInstance.displayMessage(result);
                     demoApp.getTrades();
                 },
                 (result) => {
+                    $loadingOverlay.hide();
                     modalInstance.displayMessage(result);
                 }
             );
@@ -136,25 +137,36 @@ app.controller('CreateTradeCtrl', function ($http, $location, $uibModalInstance,
 });
 
 
-app.controller('CounterTradeCtrl', function ($http, $location, $uibModalInstance, $uibModal, demoApp, apiBaseURL, peers) {
+app.controller('CounterTradeCtrl', function ($http, $location, $uibModalInstance, $uibModal, demoApp, apiBaseURL, peers, $loadingOverlay) {
     const modalInstance = this;
     modalInstance.peers = peers;
     modalInstance.form = {};
     modalInstance.formError = false;
-    modalInstance.trade= demoApp.currentTrade;
+    modalInstance.counterTradeEndpoint = "";
+    modalInstance.trade = demoApp.currentTrade;
 
     // No validation required as we reverse Trade.
-   modalInstance.create = () => {
+   modalInstance.counterTrade = (status) => {
+            $loadingOverlay.show('Transaction Processing ...', 'rgba(0, 0, 0, 0.3)', '#fff');
             modalInstance.formError = false;
             $uibModalInstance.close();
-            const counterTradeEndpoint = `${apiBaseURL}counter-trade?tradeId=${modalInstance.trade.linearId.id}&counterParty=${modalInstance.trade.initiatingParty}&sellValue=${modalInstance.trade.buyValue}&buyValue=${modalInstance.trade.sellValue}&sellCurrency=${modalInstance.trade.buyCurrency}&buyCurrency=${modalInstance.trade.sellCurrency}&tradeStatus=APPROVED`;
+            if(status=='ACCEPTED'){
+                // Reverse the trade if counter party has accepted
+                modalInstance.counterTradeEndpoint = `${apiBaseURL}counter-trade?tradeId=${modalInstance.trade.linearId.id}&counterParty=${modalInstance.trade.initiatingParty}&sellValue=${modalInstance.trade.buyValue}&buyValue=${modalInstance.trade.sellValue}&sellCurrency=${modalInstance.trade.buyCurrency}&buyCurrency=${modalInstance.trade.sellCurrency}&tradeStatus=ACCEPTED`;
+            }else{
+                // Retain the old trade values if counter party has rejected
+                modalInstance.counterTradeEndpoint = `${apiBaseURL}counter-trade?tradeId=${modalInstance.trade.linearId.id}&counterParty=${modalInstance.trade.initiatingParty}&sellValue=${modalInstance.trade.sellValue}&buyValue=${modalInstance.trade.buyValue}&sellCurrency=${modalInstance.trade.sellCurrency}&buyCurrency=${modalInstance.trade.buyCurrency}&tradeStatus=REJECTED`;
+            }
+
             // Counter Trade and handle success / fail responses.
-            $http.put(counterTradeEndpoint).then(
+            $http.put(modalInstance.counterTradeEndpoint).then(
                 (result) => {
+                    $loadingOverlay.hide();
                     modalInstance.displayMessage(result);
                     demoApp.getTrades();
                   },
                 (result) => {
+                    $loadingOverlay.hide();
                     modalInstance.displayMessage(result);
                 }
             );

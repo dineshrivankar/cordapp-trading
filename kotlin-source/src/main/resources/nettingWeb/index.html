@@ -24,6 +24,7 @@ COMING WEEKS WE'LL WRITE A TUTORIAL ON HOW BEST TO DO THIS.
     <script src="assets/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script src="assets/js/angular.min.js"></script>
     <script src="assets/js/ui-bootstrap-tpls.min.js"></script>
+    <script src="assets/js/ng-loading-overlay.min.js"></script>
     <script src="js/angular-module.js"></script>
 </head>
 <body ng-app="nettingAppModule" ng-controller="NeetingAppController as demoApp">
@@ -63,7 +64,7 @@ COMING WEEKS WE'LL WRITE A TUTORIAL ON HOW BEST TO DO THIS.
                     <div ng-show="!demoApp.trades.length" class="panel-body">Use the "Create Trade" button to send an Trade to a peer.</div>
                     <div ng-repeat="trade in demoApp.trades" class="panel panel-default">
                         <div class="bs-callout bs-callout-danger pull-right" >
-                            <h4 ng-class="(trade.tradeStatus=='APPROVED') ? 'trade-approved' : 'trade-pending'">{{trade.tradeStatus}}</h4>
+                            <h4 ng-class="(trade.tradeStatus=='ACCEPTED') ? 'trade-accepted' : 'trade-pending'">{{trade.tradeStatus}}</h4>
                         </div>
                         <div class="panel-body panel-border">
                             <div class="tradeId"><h4>Trade ID - {{trade.linearId.id}}</h4></div>
@@ -81,13 +82,13 @@ COMING WEEKS WE'LL WRITE A TUTORIAL ON HOW BEST TO DO THIS.
                                                         <div class="form-group">
                                                             <label class="col-sm-4 control-label form-label">Organization</label>
                                                             <div class="col-sm-8 form-data">
-                                                                <span>{{(trade.tradeStatus=='APPROVED') ? trade.counterParty : trade.initiatingParty}}</span>
+                                                                <span>{{(trade.tradeStatus=='ACCEPTED') ? trade.counterParty : trade.initiatingParty}}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="col-sm-4 control-label form-label">Sell </label>
                                                             <div class="col-sm-8 form-data">
-                                                                <span>{{(trade.tradeStatus=='APPROVED') ? trade.buyValue : trade.sellValue}} {{(trade.tradeStatus=='APPROVED') ? trade.buyCurrency : trade.sellCurrency}}</span>
+                                                                <span>{{(trade.tradeStatus=='ACCEPTED') ? trade.buyValue : trade.sellValue}} {{(trade.tradeStatus=='ACCEPTED') ? trade.buyCurrency : trade.sellCurrency}}</span>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -97,13 +98,13 @@ COMING WEEKS WE'LL WRITE A TUTORIAL ON HOW BEST TO DO THIS.
                                                         <div class="form-group">
                                                             <label class="col-sm-4 control-label form-label">Organization</label>
                                                             <div class="col-sm-8 form-data">
-                                                                <span>{{(trade.tradeStatus=='APPROVED') ? trade.initiatingParty : trade.counterParty}}</span>
+                                                                <span>{{(trade.tradeStatus=='ACCEPTED') ? trade.initiatingParty : trade.counterParty}}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="col-sm-4 control-label form-label">Buy Value</label>
                                                             <div class="col-sm-8 form-data">
-                                                                <span>{{(trade.tradeStatus=='APPROVED') ? trade.sellValue : trade.buyValue}} {{(trade.tradeStatus=='APPROVED') ? trade.sellCurrency : trade.buyCurrency}}</span>
+                                                                <span>{{(trade.tradeStatus=='ACCEPTED') ? trade.sellValue : trade.buyValue}} {{(trade.tradeStatus=='ACCEPTED') ? trade.sellCurrency : trade.buyCurrency}}</span>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -211,7 +212,8 @@ COMING WEEKS WE'LL WRITE A TUTORIAL ON HOW BEST TO DO THIS.
         </div>
         <div class="modal-footer">
             <button ng-click="modalInstance.cancel()" type="button" class="btn btn-default">Close</button>
-            <button ng-click="modalInstance.create()" type="button" class="btn btn-primary">Create Counter Trade</button>
+            <button ng-click="modalInstance.counterTrade('REJECTED')" type="button" class="btn btn-danger">Reject Trade</button>
+            <button ng-click="modalInstance.counterTrade('ACCEPTED')" type="button" class="btn btn-primary">Create Counter Trade</button>
         </div>
     </form>
 </script>

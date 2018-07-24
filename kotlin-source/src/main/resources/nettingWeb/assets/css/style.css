@@ -8,10 +8,11 @@
 }
 .site-header{width:100%;text-align:center;color: #777;font-size: 22px;margin-top: 10px;}
 .panel-border{border-color:#ddd !important;border:2px solid;}
-.trade-approved {color:#5cb85c; margin: 15px; font-size: 20px;}
+.trade-accepted {color:#5cb85c; margin: 15px; font-size: 20px;}
 .trade-pending {color:#ce4844;  margin: 15px; font-size: 20px;}
 .tradeId {color:#1b809e;}
 .form-group, .table {margin-bottom:0px !important}
 .form-data{margin-top: 8px;}
 .form-label{padding-right: 0px !important;}
 .transactionDetail{ height:420px; overflow-x: hidden; overflow-y: auto; }
+#ng-loading-overlay { font-size: 23px; font-weight: bold;}
