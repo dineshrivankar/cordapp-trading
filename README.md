@@ -1,5 +1,5 @@
 
-# The Netting and Settlement  CorDapp
+# The Trading CorDapp
 
 This CorDapp is an example of how trades can be created and settled confidentially. For example, a party can create a trade 
 with a counterparty stating that they want to sell 10 USD and buy 100 EUR in return. The counterparty can then create a 
@@ -16,8 +16,8 @@ comes with an API and website that allows you to do all of the aforementioned th
 
 # Instructions for setting up
 
-1. `git clone https://github.com/dineshrivankar/cordapp-netting-and-settlement.git`
-2. `cd cordapp-netting-and-settlement`
+1. `git clone https://github.com/dineshrivankar/cordapp-trading.git`
+2. `cd cordapp-trading`
 3. `./gradlew deployNodes` - building may take upto a minute (it's much quicker if you already have the Corda binaries)./r  
 4. `cd kotlin-source/build/nodes`
 5. `./runnodes`
@@ -30,7 +30,7 @@ At this point you will have a notary node running as well as three other nodes a
 2. PartyB: `http://localhost:10012`
 3. PartyC: `http://localhost:10015`
 
-You'll see a basic page, listing all the API end-points and static web content. Click on the "nettingWeb" link under 
+You'll see a basic page, listing all the API end-points and static web content. Click on the "tradingWeb" link under
 "static web content". The dashboard shows you a number of things:
 
 1. All trades to date

@@ -1,7 +1,7 @@
-package com.netting.contract
+package com.trading.contract
 
-import com.netting.contract.TradeContract.Companion.TRADE_CONTRACT_ID
-import com.netting.state.TradeState
+import com.trading.contract.TradeContract.Companion.TRADE_CONTRACT_ID
+import com.trading.state.TradeState
 import net.corda.core.identity.CordaX500Name
 import net.corda.testing.core.TestIdentity
 import net.corda.testing.node.MockServices

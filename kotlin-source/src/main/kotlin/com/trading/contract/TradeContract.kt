@@ -1,6 +1,6 @@
-package com.netting.contract
+package com.trading.contract
 
-import com.netting.state.TradeState
+import com.trading.state.TradeState
 import net.corda.core.contracts.CommandData
 import net.corda.core.contracts.Contract
 import net.corda.core.contracts.Requirements.using
@@ -26,7 +26,7 @@ import net.corda.core.transactions.LedgerTransaction
 class TradeContract : Contract {
     companion object {
         @JvmStatic
-        val TRADE_CONTRACT_ID = "com.netting.contract.TradeContract"
+        val TRADE_CONTRACT_ID = "com.trading.contract.TradeContract"
     }
 
     /**

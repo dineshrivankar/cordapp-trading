@@ -1,6 +1,6 @@
-package com.netting.state
+package com.trading.state
 
-import com.netting.schema.TradeSchemaV1
+import com.trading.schema.TradeSchemaV1
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier

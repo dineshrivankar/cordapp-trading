@@ -1,4 +1,4 @@
-package com.netting
+package com.trading
 
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
@@ -47,7 +47,7 @@ class DriverBasedTests {
                 val webserverHandle = startWebserver(nodeHandle).getOrThrow()
 
                 val nodeAddress = webserverHandle.listenAddress
-                val url = "http://$nodeAddress/api/netting/ious"
+                val url = "http://$nodeAddress/api/trading/ious"
 
                 val request = Request.Builder().url(url).build()
                 val client = OkHttpClient()

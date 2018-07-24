@@ -1,11 +1,11 @@
-package com.netting.api
+package com.trading.api
 
-import com.netting.flow.CounterTradeFlow
-import com.netting.flow.TradeFlow.Initiator
-import com.netting.flow.CounterTradeFlow.CounterInitiator
-import com.netting.flow.TradeFlow
-import com.netting.schema.TradeSchemaV1
-import com.netting.state.TradeState
+import com.trading.flow.CounterTradeFlow
+import com.trading.flow.TradeFlow.Initiator
+import com.trading.flow.CounterTradeFlow.CounterInitiator
+import com.trading.flow.TradeFlow
+import com.trading.schema.TradeSchemaV1
+import com.trading.state.TradeState
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.internal.DEPLOYED_CORDAPP_UPLOADER
@@ -27,8 +27,8 @@ import javax.ws.rs.core.Response.Status.*
 
 val SERVICE_NAMES = listOf("Notary", "Network Map Service")
 
-// This API is accessible from /api/netting. All paths specified below are relative to it.
-@Path("netting")
+// This API is accessible from /api/trading. All paths specified below are relative to it.
+@Path("trading")
 class TradeApi(private val rpcOps: CordaRPCOps) {
     private val myLegalName: CordaX500Name = rpcOps.nodeInfo().legalIdentities.first().name
 

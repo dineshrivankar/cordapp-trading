@@ -1,15 +1,16 @@
-package com.netting.flow
+package com.trading.flow
 
 import co.paralleluniverse.fibers.Suspendable
-import com.netting.contract.TradeContract
-import com.netting.contract.TradeContract.Companion.TRADE_CONTRACT_ID
-import com.netting.flow.TradeFlow.Acceptor
-import com.netting.flow.TradeFlow.Initiator
-import com.netting.state.TradeState
+import com.trading.contract.TradeContract
+import com.trading.contract.TradeContract.Companion.TRADE_CONTRACT_ID
+import com.trading.flow.CounterTradeFlow.CounterAcceptor
+import com.trading.flow.CounterTradeFlow.CounterInitiator
+import com.trading.state.TradeState
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
 import net.corda.core.identity.Party
+import net.corda.core.node.services.queryBy
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
@@ -18,23 +19,26 @@ import java.sql.ClientInfoStatus
 import java.util.*
 
 /**
- * This flow allows two parties (the [Creator] and the [CounterParty]) to come to an agreement about the Trade.
+ * This flow allows two parties (the [Initiator] and the [Acceptor]) to come to an agreement about the Trade encapsulated
+ * within an [TradeState].
  *
- * In our simple netting example, the [CounterParty] always accepts a valid Trade.
+ * In our simple trading, the [Acceptor] always accepts a valid Trade.
  *
  * These flows have deliberately been implemented by using only the call() method for ease of understanding. In
  * practice we would recommend splitting up the various stages of the flow into sub-routines.
  *
  * All methods called within the [FlowLogic] sub-class need to be annotated with the @Suspendable annotation.
  */
-object TradeFlow {
+object CounterTradeFlow {
     @InitiatingFlow
     @StartableByRPC
-    class Initiator(val sellValue: Int,
+    class CounterInitiator(
+                    val sellValue: Int,
                     val sellCurrency: String,
                     val buyValue: Int,
                     val buyCurrency: String,
                     val tradeStatus: String,
+                    val tradeId: String,
                     val counterParty: Party) : FlowLogic<SignedTransaction>() {
         /**
          * The progress tracker checkpoints each stage of the flow and outputs the specified messages when each
@@ -74,11 +78,14 @@ object TradeFlow {
             // Stage 1.
             progressTracker.currentStep = GENERATING_TRANSACTION
 
-            // Generate an unsigned transaction.
-            val tradeState = TradeState(sellValue,sellCurrency,buyValue,buyCurrency,serviceHub.myInfo.legalIdentities.first(), counterParty,tradeStatus)
-            val txCommand = Command(TradeContract.Commands.Create(), tradeState.participants.map { it.owningKey })
+            // Generate an transaction by taking the current state
+            val inputTradeState = serviceHub.vaultService.queryBy<TradeState>().states.singleOrNull{ it.state.data.tradeStatus == "PENDING" && it.state.data.linearId.toString() == tradeId } ?: throw FlowException("No state found in the vault")
+            val tradeLinerId= inputTradeState.state.data.linearId.copy(id = inputTradeState.state.data.linearId.id)
+            val counterTradeState = TradeState(sellValue,sellCurrency,buyValue,buyCurrency,serviceHub.myInfo.legalIdentities.first(), counterParty,tradeStatus,tradeLinerId)
+            val txCommand = Command(TradeContract.Commands.CounterTrade(), counterTradeState.participants.map { it.owningKey })
             val txBuilder = TransactionBuilder(notary)
-                    .addOutputState(tradeState, TRADE_CONTRACT_ID)
+                    .addOutputState(counterTradeState, TRADE_CONTRACT_ID)
+                    .addInputState(inputTradeState)
                     .addCommand(txCommand)
 
             // Stage 2.
@@ -102,14 +109,13 @@ object TradeFlow {
 
             // Stage 5.
             progressTracker.currentStep = FINALISING_TRANSACTION
-
             // Notarise and record the transaction in both parties' vaults.
             return subFlow(FinalityFlow(fullySignedTx, FINALISING_TRANSACTION.childProgressTracker()))
         }
     }
 
-    @InitiatedBy(Initiator::class)
-    class Acceptor(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
+    @InitiatedBy(CounterInitiator::class)
+    class CounterAcceptor(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {
             val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {

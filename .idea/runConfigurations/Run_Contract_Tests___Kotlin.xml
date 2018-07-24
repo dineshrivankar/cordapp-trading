@@ -2,15 +2,15 @@
   <configuration default="false" name="Run Contract Tests - Kotlin" type="JUnit" factoryName="JUnit">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="com.netting.contract.*" />
+        <option name="PATTERN" value="com.trading.contract.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
     <module name="kotlin-source_test" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
-    <option name="PACKAGE_NAME" value="com.netting.contract" />
-    <option name="MAIN_CLASS_NAME" value="com.netting.contract.TradeContractTests" />
+    <option name="PACKAGE_NAME" value="com.trading.contract" />
+    <option name="MAIN_CLASS_NAME" value="com.trading.contract.TradeContractTests" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="VM_PARAMETERS" value="-ea" />

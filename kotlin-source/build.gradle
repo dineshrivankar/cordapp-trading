@@ -12,7 +12,7 @@ apply plugin: 'net.corda.plugins.cordapp'
 apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
 
-jar.baseName = "cordapp-netting"
+jar.baseName = "cordapp-trading"
 
 sourceSets {
     main {
@@ -119,6 +119,6 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
 
 task runExampleClientRPCKotlin(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.netting.client.ExampleClientRPCKt'
+    main = 'com.trading.client.ExampleClientRPCKt'
     args 'localhost:10008'
 }

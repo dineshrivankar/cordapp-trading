@@ -1,4 +1,4 @@
-package com.netting.schema
+package com.trading.schema
 
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState

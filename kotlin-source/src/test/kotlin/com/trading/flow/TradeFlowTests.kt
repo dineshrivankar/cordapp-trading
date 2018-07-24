@@ -1,6 +1,6 @@
-package com.netting.flow
+package com.trading.flow
 
-import com.netting.state.TradeState
+import com.trading.state.TradeState
 import net.corda.core.contracts.TransactionVerificationException
 import net.corda.core.node.services.queryBy
 import net.corda.core.utilities.getOrThrow
@@ -20,7 +20,7 @@ class TradeFlowTests {
 
     @Before
     fun setup() {
-        network = MockNetwork(listOf("com.netting.contract"))
+        network = MockNetwork(listOf("com.trading.contract"))
         a = network.createPartyNode()
         b = network.createPartyNode()
         // For real nodes this happens automatically, but we have to manually register the flow for tests.

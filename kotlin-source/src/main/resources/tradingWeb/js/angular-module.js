@@ -16,18 +16,18 @@
 // VIA THE NODE'S RPC INTERFACE. IN THE COMING WEEKS WE'LL WRITE A TUTORIAL ON
 // HOW BEST TO DO THIS.
 
-const app = angular.module('nettingAppModule', ['ui.bootstrap','ngLoadingOverlay']);
+const app = angular.module('tradingAppModule', ['ui.bootstrap','ngLoadingOverlay']);
 
 // Fix for unhandled rejections bug.
 app.config(['$qProvider', function ($qProvider) {
     $qProvider.errorOnUnhandledRejections(false);
 }]);
 
-app.controller('NeetingAppController', function($http, $location, $uibModal) {
+app.controller('TradingAppController', function($http, $location, $uibModal) {
     const demoApp = this;
 
     // We identify the node.
-    const apiBaseURL = "/api/netting/";
+    const apiBaseURL = "/api/trading/";
     let peers = [];
     $http.get(apiBaseURL + "me").then((response) => demoApp.thisNode = response.data.me);
     $http.get(apiBaseURL + "peers").then((response) => peers = response.data.peers);
