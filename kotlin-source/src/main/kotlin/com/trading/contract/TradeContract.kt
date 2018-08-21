@@ -52,7 +52,6 @@ class TradeContract : Contract {
                     "The Trade's buy value must be non-negative." using (out.buyValue > 0)
                     "The Trade's sell currency can't be empty." using (out.sellCurrency.isNotEmpty())
                     "The Trade's buy currency can't be empty." using (out.buyCurrency.isNotEmpty())
-                    "The Trade's buy value must be non-negative." using (out.buyValue > 0)
                 }
             }
 
@@ -70,7 +69,6 @@ class TradeContract : Contract {
                     "The Trade's buy value must be non-negative." using (out.buyValue > 0)
                     "The Trade's sell currency can't be empty." using (out.sellCurrency.isNotEmpty())
                     "The Trade's buy currency can't be empty." using (out.buyCurrency.isNotEmpty())
-                    "The Trade's buy value must be non-negative." using (out.buyValue > 0)
                 }
             }
         }
